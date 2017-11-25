@@ -3,12 +3,15 @@ var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var methodOverride=require("method-override");
+var expressSanitizer=require("express-sanitizer");
+
 //APP CONGIG
 app.set("view engine","ejs");
 mongoose.connect("mongodb://localhost/restful_blog_app");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
+app.use(expressSanitizer());
 
 // MONGOOSE/MODEL/CONFIG
 var blogSchema = new mongoose.Schema({
@@ -24,6 +27,8 @@ app.get("/",function (req,res) {
     res.redirect("/blogs");
 });
 app.get("/blogs",function (req,res) {
+    req.body.blog.body=req.sanitize(req.body.blog.body);
+
     Blog.find({},function (err,blogs) {
         if(err){
             console.log(err);
@@ -66,6 +71,7 @@ app.get("/blogs/:id/edit",function (req,res) {
 });
 
 app.put("/blogs/:id",function (req,res) {
+    req.body.blog.body=req.sanitize(req.body.blog.body);
     Blog.findByIdAndUpdate(req.params.id,req.body.blog,function (err,updatedBlog) {
         if(err){
             res.redirect("/blogs");
