@@ -4,15 +4,18 @@
         <%= blog.title %></div>
     <div class="ui top attached segment">
         <div class="item">
-            <img class="ui centered rounded image" src="<%= blog.image %>" alt="">
+            <img class="ui large centered rounded image" src="<%= blog.image %>" alt="">
         </div>
         <div class="content">
             <span><%= blog.created.toDateString() %></span>
         </div>
         <div class="description">
             <p><%= blog.body %></p>
-
         </div>
+        <a class="ui orange basic button" href="/blogs/<%=blog._id%>/edit">Edit</a>
+        <form id="delete" action="/blogs/<%=blog._id%>?_method=DELETE" method="POST">
+            <button class="ui red inverted button">Delete</button>
+        </form>
     </div>
 
 
